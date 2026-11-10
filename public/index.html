@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dunwell: late payment interest calculator and invoice chasing emails</title>
+<meta name="description" content="Enter one overdue invoice. Dunwell calculates the statutory interest and compensation you can claim under UK and EU law, then writes the whole chase, from friendly nudge to letter before claim.">
+<meta property="og:title" content="Dunwell: chase the invoice, keep the client">
+<meta property="og:description" content="Late payment interest calculator and a five-step chase sequence, written for you in under a minute.">
+<meta name="theme-color" content="#F5F1E8">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<a class="skip" href="#tool">Skip to the calculator</a>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="/" aria-label="Dunwell home"><span class="brand-mark" aria-hidden="true">D</span>Dunwell</a>
+    <nav class="nav" aria-label="Main">
+      <a href="#how">How it works</a>
+      <a href="#law">Your rights</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <span class="plan-chip" id="plan-chip" hidden>Pro</span>
+  </div>
+</header>
+
+<main>
+<div class="wrap banner" id="banner" role="status" hidden></div>
+
+<section class="hero wrap">
+  <div class="hero-copy">
+    <p class="eyebrow">For freelancers and small businesses with an unpaid invoice</p>
+    <h1>Chase the invoice. <em>Keep the client.</em></h1>
+    <p class="lede">Enter one overdue invoice. Dunwell works out the interest and compensation the law lets you claim, then writes the whole chase for you, from a friendly nudge to a formal letter before claim.</p>
+    <ul class="ticks">
+      <li>UK and EU statutory rates built in, period by period</li>
+      <li>Five emails and letters, dated and ready to send</li>
+      <li>No account. Your invoice details are never stored on our servers</li>
+    </ul>
+    <div class="stamp" aria-hidden="true"><span>Past due</span><small>interest accruing</small></div>
+  </div>
+
+  <form class="card tool" id="tool" novalidate>
+    <h2 class="tool-title">What are you owed?</h2>
+
+    <fieldset class="seg" id="regime-seg">
+      <legend>Work out interest using</legend>
+      <label><input type="radio" name="regime" value="uk" checked><span>UK law</span></label>
+      <label><input type="radio" name="regime" value="eu"><span>EU law</span></label>
+      <label><input type="radio" name="regime" value="contract"><span>Contract rate</span></label>
+      <label><input type="radio" name="regime" value="none"><span>No interest</span></label>
+    </fieldset>
+    <p class="hint" id="regime-hint"></p>
+
+    <div class="grid2">
+      <div class="field">
+        <label for="amount">Amount owed <span class="soft">(including VAT)</span></label>
+        <div class="money">
+          <span class="cur-fixed" id="cur-fixed">£</span>
+          <select id="currency" name="currency" aria-label="Currency" hidden>
+            <option>EUR</option><option>USD</option><option>GBP</option><option>CAD</option><option>AUD</option>
+            <option>CHF</option><option>SEK</option><option>NOK</option><option>DKK</option><option>PLN</option>
+          </select>
+          <input id="amount" name="amount" inputmode="decimal" autocomplete="off" placeholder="2,400.00" required>
+        </div>
+        <p class="err" data-err="amount"></p>
+      </div>
+      <div class="field">
+        <label for="dueDate">Payment was due on</label>
+        <input id="dueDate" name="dueDate" type="date" required>
+        <p class="err" data-err="dueDate"></p>
+      </div>
+    </div>
+
+    <div class="grid2" data-show="eu" hidden>
+      <div class="field">
+        <label for="margin">Points above ECB rate</label>
+        <input id="margin" name="margin" inputmode="decimal" value="8">
+        <p class="hint">8 is the EU minimum. Some countries set more, for example 9 in Germany.</p>
+        <p class="err" data-err="margin"></p>
+      </div>
+    </div>
+
+    <div class="grid2" data-show="contract" hidden>
+      <div class="field">
+        <label for="contractRate">Late-payment rate in your contract</label>
+        <div class="money">
+          <input id="contractRate" name="contractRate" inputmode="decimal" placeholder="1.5">
+          <select id="ratePer" name="ratePer" aria-label="Rate period"><option value="month">% per month</option><option value="year">% per year</option></select>
+        </div>
+        <p class="err" data-err="contractRate"></p>
+      </div>
+      <div class="field">
+        <label for="lateFee">Fixed late fee <span class="soft">(optional)</span></label>
+        <input id="lateFee" name="lateFee" inputmode="decimal" placeholder="0.00">
+        <p class="err" data-err="lateFee"></p>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label for="invoiceNumber">Invoice number</label>
+        <input id="invoiceNumber" name="invoiceNumber" autocomplete="off" placeholder="INV-0142" required>
+        <p class="err" data-err="invoiceNumber"></p>
+      </div>
+      <div class="field">
+        <label for="clientCompany">Who owes you</label>
+        <input id="clientCompany" name="clientCompany" autocomplete="off" placeholder="Client or company name" required>
+        <p class="err" data-err="clientCompany"></p>
+      </div>
+      <div class="field">
+        <label for="clientContact">Their contact's first name <span class="soft">(optional)</span></label>
+        <input id="clientContact" name="clientContact" autocomplete="off" placeholder="Sam">
+      </div>
+      <div class="field">
+        <label for="yourName">Your name</label>
+        <input id="yourName" name="yourName" autocomplete="name" required>
+        <p class="err" data-err="yourName"></p>
+      </div>
+    </div>
+
+    <fieldset class="seg seg-small">
+      <legend>Tone</legend>
+      <label><input type="radio" name="tone" value="warm" checked><span>Warm</span></label>
+      <label><input type="radio" name="tone" value="direct"><span>Direct</span></label>
+    </fieldset>
+
+    <details class="more">
+      <summary>Add details for the formal letter <span class="soft">(optional)</span></summary>
+      <div class="grid2">
+        <div class="field">
+          <label for="yourBusiness">Your business name</label>
+          <input id="yourBusiness" name="yourBusiness" autocomplete="organization">
+        </div>
+        <div class="field">
+          <label for="invoiceDate">Invoice date</label>
+          <input id="invoiceDate" name="invoiceDate" type="date">
+        </div>
+        <div class="field">
+          <label for="yourAddress">Your address</label>
+          <textarea id="yourAddress" name="yourAddress" rows="3"></textarea>
+        </div>
+        <div class="field">
+          <label for="clientAddress">Client's address</label>
+          <textarea id="clientAddress" name="clientAddress" rows="3"></textarea>
+        </div>
+        <div class="field span2">
+          <label for="paymentDetails">How to pay you</label>
+          <textarea id="paymentDetails" name="paymentDetails" rows="3" placeholder="Bank name, account name, sort code or IBAN, or a payment link"></textarea>
+        </div>
+      </div>
+    </details>
+
+    <p class="err form-err" id="form-err" role="alert"></p>
+    <button class="btn btn-primary btn-block" type="submit" id="submit">Calculate and write my chase</button>
+    <p class="fine">Free: the calculator and the first two emails. Statutory interest applies to business-to-business debts only.</p>
+  </form>
+</section>
+
+<section class="wrap tracker" id="tracker" hidden>
+  <h2 class="h-small">Your open chases</h2>
+  <div id="tracker-list"></div>
+  <p class="fine" id="tracker-note"></p>
+</section>
+
+<section class="wrap results" id="results" hidden aria-live="polite">
+  <div class="ledger card" id="ledger"></div>
+  <div class="steps-head">
+    <h2>Your chase, step by step</h2>
+    <button class="btn btn-ghost" type="button" id="ics-btn" hidden>Add the schedule to my calendar</button>
+  </div>
+  <ol class="steps" id="steps"></ol>
+</section>
+
+<section class="wrap how" id="how">
+  <h2>How it works</h2>
+  <ol class="how-grid">
+    <li><span class="num">1</span><h3>Enter the invoice</h3><p>Amount, due date, who owes you. Under a minute, and no sign-up.</p></li>
+    <li><span class="num">2</span><h3>See what you can claim</h3><p>Interest to the day, split by rate period, plus fixed compensation. The total updates every time you come back.</p></li>
+    <li><span class="num">3</span><h3>Send the next step</h3><p>Each message is written, dated and ready to copy into your email. The sequence gets firmer only when it has to.</p></li>
+  </ol>
+</section>
+
+<section class="wrap law" id="law">
+  <h2>What the law already gives you</h2>
+  <p class="section-lede">You do not need a late-fee clause in your contract. In the UK and across the EU, a business that is paid late by another business can claim interest and a fixed sum automatically.</p>
+  <div class="law-grid">
+    <article class="card">
+      <h3>United Kingdom</h3>
+      <p class="big-rate"><span id="uk-rate">8% + base rate</span> <small>a year</small></p>
+      <p>8% above the Bank of England base rate (<span id="uk-ref">see calculator</span> for the current half-year), under the Late Payment of Commercial Debts (Interest) Act 1998.</p>
+      <p>Plus fixed compensation: £40 on debts under £1,000, £70 up to £9,999.99, £100 from £10,000.</p>
+    </article>
+    <article class="card">
+      <h3>European Union</h3>
+      <p class="big-rate"><span id="eu-rate">8 points + ECB rate</span> <small>a year, minimum</small></p>
+      <p>At least 8 points above the ECB reference rate (<span id="eu-ref">see calculator</span> for the current half-year), under Directive 2011/7/EU as implemented in each member state.</p>
+      <p>Plus at least €40 compensation for recovery costs on every late invoice.</p>
+    </article>
+  </div>
+  <p class="fine" id="rates-verified"></p>
+</section>
+
+<section class="wrap pricing" id="pricing">
+  <h2>Pricing</h2>
+  <p class="section-lede">The minimum compensation on a single late invoice is £40 or €40. That covers four months of Pro.</p>
+  <div class="price-grid">
+    <article class="card price">
+      <h3>Free</h3>
+      <p class="price-fig">€0</p>
+      <ul>
+        <li>Interest and compensation calculator</li>
+        <li>Friendly nudge and firm follow-up emails</li>
+        <li>Track one invoice in your browser</li>
+      </ul>
+      <a class="btn btn-ghost btn-block" href="#tool">Use the calculator</a>
+    </article>
+    <article class="card price price-pro">
+      <h3>Pro</h3>
+      <p class="price-fig">€9 <small>a month</small></p>
+      <p class="price-alt" id="yearly-line" hidden>or €79 a year</p>
+      <ul>
+        <li>The full five-step chase for every invoice</li>
+        <li>Interest notice with the legal basis and figures</li>
+        <li>Final notice and a printable letter before claim</li>
+        <li>Calendar file so no step is forgotten</li>
+        <li>Unlimited tracked invoices</li>
+        <li id="ai-line" hidden>Tailor any email to the situation with AI</li>
+      </ul>
+      <div id="buy">
+        <button class="btn btn-primary btn-block" type="button" data-plan="monthly">Go Pro for €9 a month</button>
+        <button class="btn btn-ghost btn-block" type="button" data-plan="yearly" id="buy-yearly" hidden>Pay yearly, €79</button>
+      </div>
+      <p class="test-mode" id="test-mode" hidden>Test mode: this checkout accepts test cards only and takes no real money.</p>
+      <p class="fine" id="buy-msg" role="status">Cancel any time. <button class="linkish" type="button" id="restore-open">Already subscribed? Restore access</button></p>
+      <p class="fine" id="manage-line" hidden><button class="linkish" type="button" id="manage-btn">Manage billing</button></p>
+    </article>
+  </div>
+</section>
+
+<section class="wrap faq" id="faq">
+  <h2>Questions</h2>
+  <details><summary>Can I charge interest if my contract says nothing about late payment?</summary>
+    <p>For business-to-business invoices in the UK and the EU, yes. The right is statutory and applies where the contract is silent. If your contract sets its own late-payment rate, that rate normally applies instead, so choose "Contract rate".</p></details>
+  <details><summary>Does this work for invoices to consumers?</summary>
+    <p>No. Statutory late-payment interest covers commercial debts between businesses, including sole traders and public bodies. For consumer debts use "Contract rate" or "No interest".</p></details>
+  <details><summary>Will claiming interest sour the relationship?</summary>
+    <p>The sequence starts friendly and mentions interest only at the third step, with an offer to waive it if the invoice is paid within a week. Most clients pay well before that. You decide which steps to send.</p></details>
+  <details><summary>I'm in the US, Canada, or elsewhere. Can I use it?</summary>
+    <p>Yes. Choose "Contract rate" and enter the rate from your contract or terms, per month or per year. Rules on maximum rates vary by state and country, so check yours.</p></details>
+  <details><summary>Where does my invoice data go?</summary>
+    <p>It is sent to our server to produce your figures and emails, and it is not saved there. Your tracker lives in your own browser. If you use the optional AI tailoring, the text of that one email is sent to our AI provider to be rewritten.</p></details>
+  <details><summary>Is this legal advice?</summary>
+    <p>No. Dunwell gives you accurate arithmetic and well-drafted correspondence based on published rates and legislation. For disputed debts, large sums, or before starting court proceedings, speak to a solicitor or lawyer.</p></details>
+  <details><summary>How do I cancel Pro?</summary>
+    <p>Use "Manage billing" in the pricing section. It takes two clicks, and you keep Pro until the end of the period you paid for.</p></details>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <p><strong>Dunwell</strong> is a product of Monarch Code L.L.C. Not a law firm; nothing here is legal advice.</p>
+    <p><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></p>
+  </div>
+</footer>
+
+<dialog id="restore-dialog" class="dialog">
+  <form method="dialog" id="restore-form">
+    <h3>Restore Pro on this device</h3>
+    <label for="restore-email">Email you paid with</label>
+    <input id="restore-email" type="email" autocomplete="email" required>
+    <p class="err" id="restore-err" role="alert"></p>
+    <div class="dialog-actions">
+      <button class="btn btn-ghost" type="button" id="restore-cancel">Cancel</button>
+      <button class="btn btn-primary" type="submit">Restore</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="print-sheet" aria-hidden="true"></div>
+<script src="/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "dunwell",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Late-payment interest calculator and invoice chase sequence",
+  "license": "UNLICENSED",
+  "engines": { "node": "22.x" },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "DEV_UNLOCK=1 node --watch server.js",
+    "test": "node --test",
+    "preview": "node scripts/build-preview.js"
+  }
+}
