@@ -44,7 +44,11 @@ export default function BuyButton({ item, paddle, label, className }: { item: It
       const json = await res.json().catch(() => ({}));
       if (!res.ok) { setError(json.error ?? 'Something went wrong. Try again.'); return; }
       await loadPaddle(paddle);
-      window.Paddle.Checkout.open({ transactionId: json.transactionId });
+      window.Paddle.Checkout.open({
+        transactionId: json.transactionId,
+        // Paddle sends the buyer here itself once payment succeeds.
+        settings: { successUrl: `${window.location.origin}/app?purchased=1` },
+      });
     } catch {
       setError('We could not open the checkout. Check your connection and try again.');
     } finally {
