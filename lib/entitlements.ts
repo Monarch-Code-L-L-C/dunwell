@@ -13,7 +13,6 @@ export type Grant = {
 
 function live(g: Grant, now: Date): boolean {
   // A canceled plan keeps access until the period it paid for ends.
-  // past_due keeps access too: Paddle retries the card before it cancels.
   return new Date(g.periodEnd).getTime() > now.getTime();
 }
 

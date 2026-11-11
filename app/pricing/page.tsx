@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { JOBS, PLANS, euro } from '@/lib/catalog';
+import { checkoutReady, PADDLE_ENV, PADDLE_CLIENT_TOKEN } from '@/lib/paddle';
+import BuyButton from '@/components/BuyButton';
 
 export const metadata: Metadata = {
   title: 'Pricing',
@@ -17,6 +19,9 @@ export default function Pricing() {
   const products = PLANS.filter((p) => p.id !== 'all');
   const all = PLANS.find((p) => p.id === 'all')!;
   const apart = products.reduce((s, p) => s + p.monthly, 0);
+  // Buying is open in test mode only, until the tools behind each plan are built.
+  const selling = checkoutReady && PADDLE_ENV === 'sandbox';
+  const paddle = { token: PADDLE_CLIENT_TOKEN, env: PADDLE_ENV } as const;
 
   return (
     <div className="mx-auto max-w-[1160px] px-6 pb-16 pt-14">
@@ -25,8 +30,13 @@ export default function Pricing() {
         Pay for one job, one product, or the whole workspace.
       </h1>
       <p className="mt-5 max-w-[38em] text-lg leading-[1.55] text-body">
-        The free tools stay free. Checkout opens when the workspace launches.
+        The free tools stay free. {selling ? '' : 'Checkout opens when the workspace launches.'}
       </p>
+      {selling && (
+        <p className="mt-4 inline-block rounded-lg border border-red bg-card px-4 py-2.5 text-[15px] text-red">
+          Test mode. Checkout takes Paddle test cards only and no real money moves.
+        </p>
+      )}
 
       <div className="mt-10 flex flex-wrap items-start gap-6">
         <section className="min-w-0 flex-[1_1_300px] rounded-[14px] border border-line bg-card p-6">
@@ -35,7 +45,14 @@ export default function Pricing() {
           <ul>
             {JOBS.map((j) => (
               <li key={j.id} className="flex justify-between gap-4 border-t border-dashed border-line py-2.5 text-[15px]">
-                <span>{j.name}</span>
+                <span>
+                  {j.name}
+                  {selling && (
+                    <span className="block">
+                      <BuyButton item={{ kind: 'job', id: j.id }} paddle={paddle} label="Buy one" className="text-sm font-semibold text-green underline underline-offset-4 disabled:opacity-60" />
+                    </span>
+                  )}
+                </span>
                 <span className="font-mono font-semibold">{euro(j.price)}</span>
               </li>
             ))}
@@ -55,6 +72,11 @@ export default function Pricing() {
                 <ul className="flex flex-col gap-2 text-[15px] leading-snug text-body">
                   {p.points.map((x) => <li key={x}>{x}</li>)}
                 </ul>
+                {selling && (
+                  <div className="mt-5">
+                    <BuyButton item={{ kind: 'plan', id: p.id, cycle: 'month' }} paddle={paddle} label={`Start ${p.name}`} className="w-full rounded-lg bg-ink px-4 py-2.5 text-[15px] font-semibold text-paper disabled:opacity-60" />
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -75,6 +97,14 @@ export default function Pricing() {
               <p className="mt-1 text-sm text-[#DDE3DD]">
                 {all.yearly !== null && <>or {euro(all.yearly)} a year. </>}The three products apart cost {euro(apart)}.
               </p>
+              {selling && (
+                <div className="mt-4 flex flex-col gap-2">
+                  <BuyButton item={{ kind: 'plan', id: 'all', cycle: 'month' }} paddle={paddle} label="Start monthly" className="w-full rounded-lg bg-paper px-4 py-2.5 text-[15px] font-semibold text-ink disabled:opacity-60" />
+                  {all.yearly !== null && (
+                    <BuyButton item={{ kind: 'plan', id: 'all', cycle: 'year' }} paddle={paddle} label="Start yearly" className="w-full rounded-lg border border-[#5A655E] px-4 py-2.5 text-[15px] font-semibold text-paper disabled:opacity-60" />
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </section>

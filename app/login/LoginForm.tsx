@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 
-export default function LoginForm({ google }: { google: boolean }) {
+export default function LoginForm({ google, next }: { google: boolean; next: string }) {
+  const back = () => `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`;
   const [email, setEmail] = useState('');
   const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
   const [error, setError] = useState('');
@@ -14,7 +15,7 @@ export default function LoginForm({ google }: { google: boolean }) {
     setState('sending');
     const { error } = await createClient().auth.signInWithOtp({
       email: email.trim(),
-      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+      options: { emailRedirectTo: back() },
     });
     if (error) {
       setState('idle');
@@ -28,7 +29,7 @@ export default function LoginForm({ google }: { google: boolean }) {
     setError('');
     const { error } = await createClient().auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback` },
+      options: { redirectTo: back() },
     });
     if (error) setError('Google sign-in did not start. Try the email link instead.');
   }

@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
-import { supabaseReady, googleSignIn } from '@/lib/supabase/env';
+import { supabaseReady, googleSignIn, safeNext } from '@/lib/supabase/env';
 import LoginForm from './LoginForm';
 
 export const metadata: Metadata = { title: 'Sign in' };
 
-export default async function Login({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
-  const { error } = await searchParams;
+export default async function Login({ searchParams }: { searchParams: Promise<{ error?: string; next?: string }> }) {
+  const { error, next } = await searchParams;
   return (
     <div className="mx-auto max-w-[440px] px-6 pb-24 pt-16">
       <h1 className="font-serif text-[40px] font-semibold leading-[1.08]">Sign in to your workspace</h1>
@@ -18,7 +18,7 @@ export default async function Login({ searchParams }: { searchParams: Promise<{ 
         </p>
       )}
       {supabaseReady ? (
-        <LoginForm google={googleSignIn} />
+        <LoginForm google={googleSignIn} next={safeNext(next)} />
       ) : (
         <p className="mt-6 rounded-lg border border-line bg-card px-4 py-3 text-[15px] text-body">Sign-in is not switched on for this site yet.</p>
       )}
