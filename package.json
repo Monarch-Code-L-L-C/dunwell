@@ -4,7 +4,9 @@
   "private": true,
   "description": "Dunwell workspace: contracts, invoices and chasing for businesses that sell to businesses",
   "license": "UNLICENSED",
-  "engines": { "node": "22.x" },
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -14,7 +16,9 @@
   "dependencies": {
     "next": "^16.4.1",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "@supabase/ssr": ">=0.10.0 <1",
+    "@supabase/supabase-js": "^2.50.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.0",

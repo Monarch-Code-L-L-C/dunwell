@@ -12,6 +12,7 @@ export default function Header() {
           <Link href="/#tools" className="hover:text-green">Tools</Link>
           <Link href="/pricing" className="hover:text-green">Pricing</Link>
         </nav>
+        <Link href="/app" className="rounded-lg bg-ink px-[18px] py-[11px] text-[15px] font-semibold text-paper">Sign in</Link>
       </div>
     </header>
   );
