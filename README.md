@@ -4,8 +4,10 @@ Late-payment interest calculator and a five-step invoice chase, written for the 
 
 Enter one overdue invoice → see the statutory interest and compensation you can claim (UK and EU rates built in, split by rate period) → get five dated messages, from a friendly nudge to a printable letter before claim.
 
-- **Free:** calculator, first two emails, one tracked invoice.
-- **Pro (€9/month, €79/year):** all five steps, calendar file, unlimited tracked invoices, optional AI tailoring.
+- **Free:** calculator, first two emails, pre-due heads-up and payment-received note, one tracked invoice.
+- **Pro (€9/month, €79/year, plus VAT):** all five steps, payment plan offer, phone call script, calendar file, unlimited tracked invoices, optional AI tailoring.
+
+Also in the app: every message can be edited in place before copying; each step can be marked as sent, which logs the date against the invoice; the tracker totals what is owed across open invoices and can be downloaded and restored as a backup file; "See an example" fills in a sample invoice; `/?regime=uk` (or `eu`, `contract`, `none`) preselects a mode. Two guide pages (`/late-payment-interest-uk`, `/late-payment-interest-eu`), `sitemap.xml` and a share image are in `public/`.
 
 ## Run it
 
@@ -14,7 +16,7 @@ Needs Node 20 or newer. There are no dependencies and no build step.
 ```bash
 cp .env.example .env     # DEV_UNLOCK=1 is set, so you see everything as a Pro user
 node server.js           # http://localhost:3000
-npm test                 # 21 tests: interest maths, letters, paywall, billing flow
+npm test                 # 24 tests: interest maths, letters, toolkit, paywall, billing flow
 ```
 
 Set `DEV_UNLOCK=0` to see the site as a free visitor does.
@@ -92,6 +94,8 @@ Statutory rates change twice a year. In the first week of January and of July, a
 
 - **UK:** the Bank of England base rate in force on 31 December (for January to June) or 30 June (for July to December).
 - **EU:** the ECB main refinancing rate in force on 1 January or 1 July.
+
+The same rates appear as static tables and worked examples in the two guide pages in `public/`; update those at the same time.
 
 **Next update due: 1 January 2027.** Until a period is added the previous rate is used and the calculation is marked provisional on screen. As of 10 November 2026 the base rate is 4% and the ECB rate 2.65%, both higher than the rates in the current half-year, so the January entries will change the figures.
 

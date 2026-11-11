@@ -85,3 +85,22 @@ test('Input is length-capped and control characters stripped', () => {
   assert.equal(v.input.clientCompany.length, 120);
   assert.ok(!v.input.clientCompany.includes('\u0000'));
 });
+
+test('Toolkit: four extra templates, two free and two Pro', () => {
+  const free = run({}, { pro: false }).extras;
+  assert.deepEqual(free.map((e) => [e.id, e.locked]), [['predue', false], ['thanks', false], ['plan', true], ['call', true]]);
+  assert.equal(free[2].body, undefined);
+  const pro = run().extras;
+  assert.ok(pro.every((e) => typeof e.body === 'string' && e.body.length > 100));
+});
+test('Payment plan: three instalments that add up to the invoice exactly', () => {
+  const plan = run({ amount: '1000' }).extras.find((e) => e.id === 'plan').body;
+  const amounts = [...plan.matchAll(/^\d\. £([\d,.]+) by/gm)].map((x) => Number(x[1].replace(/,/g, '')));
+  assert.deepEqual(amounts, [333.33, 333.33, 333.34]);
+  assert.match(plan, /1\. £333\.33 by 17 November 2026/);
+  assert.match(plan, /3\. £333\.34 by 17 January 2027/);
+  assert.match(plan, /waive the interest and charges/);
+});
+test('Toolkit with no interest never mentions interest', () => {
+  for (const e of run({ regime: 'none', currency: 'EUR' }).extras) assert.doesNotMatch(e.body, /interest/i);
+});

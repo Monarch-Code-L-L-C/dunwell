@@ -7,9 +7,14 @@
 <meta name="description" content="Enter one overdue invoice. Dunwell calculates the statutory interest and compensation you can claim under UK and EU law, then writes the whole chase, from friendly nudge to letter before claim.">
 <meta property="og:title" content="Dunwell: chase the invoice, keep the client">
 <meta property="og:description" content="Late payment interest calculator and a five-step chase sequence, written for you in under a minute.">
+<meta property="og:image" content="https://dunwell.monarchcode.io/og.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dunwell.monarchcode.io/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://dunwell.monarchcode.io/">
 <meta name="theme-color" content="#F5F1E8">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/styles.css?v=3">
 </head>
 <body>
 <a class="skip" href="#tool">Skip to the calculator</a>
@@ -20,6 +25,7 @@
     <nav class="nav" aria-label="Main">
       <a href="#how">How it works</a>
       <a href="#law">Your rights</a>
+      <a href="#guides">Guides</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
     </nav>
@@ -44,7 +50,10 @@
   </div>
 
   <form class="card tool" id="tool" novalidate>
-    <h2 class="tool-title">What are you owed?</h2>
+    <div class="tool-head">
+      <h2 class="tool-title">What are you owed?</h2>
+      <button class="linkish" type="button" id="example-btn">See an example</button>
+    </div>
 
     <fieldset class="seg" id="regime-seg">
       <legend>Work out interest using</legend>
@@ -161,7 +170,17 @@
 </section>
 
 <section class="wrap tracker" id="tracker" hidden>
-  <h2 class="h-small">Your open chases</h2>
+  <div class="tracker-head">
+    <div>
+      <h2 class="h-small">Your open chases</h2>
+      <p class="fine" id="tracker-sum"></p>
+    </div>
+    <div class="acts">
+      <button class="btn btn-ghost btn-small" type="button" id="export-btn">Download backup</button>
+      <button class="btn btn-ghost btn-small" type="button" id="import-btn">Restore backup</button>
+      <input type="file" id="import-file" accept="application/json,.json" hidden>
+    </div>
+  </div>
   <div id="tracker-list"></div>
   <p class="fine" id="tracker-note"></p>
 </section>
@@ -173,6 +192,15 @@
     <button class="btn btn-ghost" type="button" id="ics-btn" hidden>Add the schedule to my calendar</button>
   </div>
   <ol class="steps" id="steps"></ol>
+  <div id="extras-wrap" hidden>
+    <div class="steps-head">
+      <div>
+        <h2>For when it goes off-script</h2>
+        <p class="fine">Written for this invoice, for the situations the sequence doesn't cover.</p>
+      </div>
+    </div>
+    <ol class="steps steps-plain" id="extras"></ol>
+  </div>
 </section>
 
 <section class="wrap how" id="how">
@@ -182,6 +210,12 @@
     <li><span class="num">2</span><h3>See what you can claim</h3><p>Interest to the day, split by rate period, plus fixed compensation. The total updates every time you come back.</p></li>
     <li><span class="num">3</span><h3>Send the next step</h3><p>Each message is written, dated and ready to copy into your email. The sequence gets firmer only when it has to.</p></li>
   </ol>
+  <div class="feature-grid">
+    <div><h3>Edit before you send</h3><p>Every message opens for editing in place. Change a line, then copy it or open it in your email app.</p></div>
+    <div><h3>Keep a record</h3><p>Mark each step as sent and the date is logged against the invoice, so you always know what the client has already had.</p></div>
+    <div><h3>See the whole picture</h3><p>Your tracker totals what you are owed across every open invoice and how fast it is growing.</p></div>
+    <div><h3>Ready for the awkward cases</h3><p>A payment plan offer, a phone script, a pre-due heads-up and a thank-you note, each written for the invoice in front of you.</p></div>
+  </div>
 </section>
 
 <section class="wrap law" id="law">
@@ -204,6 +238,22 @@
   <p class="fine" id="rates-verified"></p>
 </section>
 
+<section class="wrap guides" id="guides">
+  <h2>Guides</h2>
+  <div class="law-grid">
+    <a class="card guide-card" href="/late-payment-interest-uk">
+      <h3>Late payment interest in the UK</h3>
+      <p>Who can claim, the rate, the formula with a worked example, the fixed compensation, and how to ask for it.</p>
+      <span class="guide-more">Read the guide</span>
+    </a>
+    <a class="card guide-card" href="/late-payment-interest-eu">
+      <h3>Late payment interest in the EU</h3>
+      <p>What Directive 2011/7/EU gives every business, payment-term limits, the €40 minimum, and cross-border recovery.</p>
+      <span class="guide-more">Read the guide</span>
+    </a>
+  </div>
+</section>
+
 <section class="wrap pricing" id="pricing">
   <h2>Pricing</h2>
   <p class="section-lede">The minimum compensation on a single late invoice is £40 or €40. That covers four months of Pro.</p>
@@ -214,6 +264,7 @@
       <ul>
         <li>Interest and compensation calculator</li>
         <li>Friendly nudge and firm follow-up emails</li>
+        <li>Pre-due heads-up and payment-received note</li>
         <li>Track one invoice in your browser</li>
       </ul>
       <a class="btn btn-ghost btn-block" href="#tool">Use the calculator</a>
@@ -226,8 +277,9 @@
         <li>The full five-step chase for every invoice</li>
         <li>Interest notice with the legal basis and figures</li>
         <li>Final notice and a printable letter before claim</li>
+        <li>Payment plan offer and phone call script</li>
         <li>Calendar file so no step is forgotten</li>
-        <li>Unlimited tracked invoices</li>
+        <li>Unlimited tracked invoices, with a sent log for each</li>
         <li id="ai-line" hidden>Tailor any email to the situation with AI</li>
       </ul>
       <div id="buy">
@@ -235,6 +287,7 @@
         <button class="btn btn-ghost btn-block" type="button" data-plan="yearly" id="buy-yearly" hidden>Pay yearly, €79</button>
       </div>
       <p class="test-mode" id="test-mode" hidden>Test mode: this checkout accepts test cards only and takes no real money.</p>
+      <p class="fine">Prices exclude VAT, which is added at checkout where it applies.</p>
       <p class="fine" id="buy-msg" role="status">Cancel any time. <button class="linkish" type="button" id="restore-open">Already subscribed? Restore access</button></p>
       <p class="fine" id="manage-line" hidden><button class="linkish" type="button" id="manage-btn">Manage billing</button></p>
     </article>
@@ -263,7 +316,7 @@
 <footer class="foot">
   <div class="wrap foot-in">
     <p><strong>Dunwell</strong> is a product of Monarch Code L.L.C. Not a law firm; nothing here is legal advice.</p>
-    <p><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></p>
+    <p><a href="/late-payment-interest-uk">UK guide</a> · <a href="/late-payment-interest-eu">EU guide</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></p>
   </div>
 </footer>
 
@@ -281,6 +334,6 @@
 </dialog>
 
 <div id="print-sheet" aria-hidden="true"></div>
-<script src="/app.js" defer></script>
+<script src="/app.js?v=3" defer></script>
 </body>
 </html>
