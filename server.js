@@ -33,9 +33,10 @@ const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=
   '.txt': 'text/plain; charset=utf-8', '.png': 'image/png', '.webmanifest': 'application/manifest+json' };
 const SECURITY = {
   'X-Content-Type-Options': 'nosniff', 'X-Frame-Options': 'DENY', 'Referrer-Policy': 'strict-origin-when-cross-origin',
-  // Paddle.js loads from cdn.paddle.com and opens the checkout in a frame on buy.paddle.com / sandbox-buy.paddle.com.
+  // Paddle.js loads from (sandbox-)cdn.paddle.com, injects its own stylesheet and inline styles for the overlay,
+  // and opens the checkout in a frame on (sandbox-)buy.paddle.com.
   // Keep this in step with the same header in vercel.json.
-  'Content-Security-Policy': "default-src 'self'; img-src 'self' data: https://cdn.paddle.com; style-src 'self' https://cdn.paddle.com; script-src 'self' https://cdn.paddle.com; frame-src https://buy.paddle.com https://sandbox-buy.paddle.com; connect-src 'self' https://*.paddle.com; form-action 'self'; frame-ancestors 'none'; base-uri 'self'"
+  'Content-Security-Policy': "default-src 'self'; img-src 'self' data: https://*.paddle.com; style-src 'self' 'unsafe-inline' https://*.paddle.com; script-src 'self' https://*.paddle.com; frame-src https://*.paddle.com; connect-src 'self' https://*.paddle.com; form-action 'self'; frame-ancestors 'none'; base-uri 'self'"
 };
 
 function send(res, status, body, headers) {
