@@ -10,6 +10,8 @@ const jetbrains = JetBrains_Mono({ subsets: ['latin'], weight: ['500', '600'], v
 
 export const metadata: Metadata = {
   title: { default: 'Dunwell: get paid on time, in full', template: '%s | Dunwell' },
+  // Not listed in search engines until launch. Remove this line to go public.
+  robots: { index: false, follow: false },
   description: 'Contracts that protect your payment, invoices that carry the terms, and chasing that runs itself. For businesses that sell to businesses.',
 };
 
