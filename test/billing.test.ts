@@ -33,7 +33,7 @@ const sub = (over: object = {}, custom: object = { account_id: ACC, kind: 'plan'
 test('subscription event grants the plan to the end of the paid period', () => {
   const ops = toOps(sub());
   assert.deepEqual(ops[0], { t: 'customer', accountId: ACC, customerId: 'ctm_1' });
-  assert.deepEqual(ops[1], { t: 'entitlement', row: { account_id: ACC, plan: 'chase', status: 'active', period_end: '2026-12-11T20:00:00Z', paddle_subscription_id: 'sub_1', updated_at: '2026-11-11T20:00:00Z' } });
+  assert.deepEqual(ops[1], { t: 'entitlement', row: { account_id: ACC, plan: 'chase', status: 'active', period_end: '2026-12-11T20:00:00Z', cancel_at: null, paddle_subscription_id: 'sub_1', updated_at: '2026-11-11T20:00:00Z' } });
 });
 
 test('canceled subscription ends when it was canceled; paused counts as canceled', () => {
@@ -44,6 +44,13 @@ test('canceled subscription ends when it was canceled; paused counts as canceled
   const p = toOps(sub({ status: 'paused', current_billing_period: null, paused_at: '2026-11-20T00:00:00Z' }));
   assert.equal((p[1] as any).row.status, 'canceled');
   assert.equal((p[1] as any).row.period_end, '2026-11-20T00:00:00Z');
+});
+
+test('a scheduled cancellation keeps the plan active and records when it ends', () => {
+  const row = (toOps({ ...sub({ scheduled_change: { action: 'cancel', effective_at: '2026-12-11T20:00:00Z', resume_at: null } }), event_type: 'subscription.updated' })[1] as any).row;
+  assert.equal(row.status, 'active');
+  assert.equal(row.cancel_at, '2026-12-11T20:00:00Z');
+  assert.equal((toOps(sub({ scheduled_change: { action: 'pause', effective_at: '2026-12-11T20:00:00Z' } }))[1] as any).row.cancel_at, null);
 });
 
 test('events without a valid account id, or for unknown plans, change nothing', () => {

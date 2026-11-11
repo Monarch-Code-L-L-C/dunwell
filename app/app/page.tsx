@@ -20,11 +20,13 @@ export default async function Workspace({ searchParams }: { searchParams: Promis
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
-  const { data: rows, error } = await supabase.from('entitlements').select('plan, status, period_end');
+  const { data: rows, error } = await supabase.from('entitlements').select('plan, status, period_end, cancel_at');
   const grants: Grant[] = (rows ?? []).map((r) => ({ plan: r.plan, status: r.status, periodEnd: r.period_end }));
   const now = new Date();
   const held = PLANS.filter((p) => grants.some((g) => g.plan === p.id && new Date(g.periodEnd) > now));
   const unlocked = features(grants, now).size;
+  const day = (iso: string) => new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+  const ending = (rows ?? []).filter((r) => r.cancel_at && new Date(r.period_end) > now).map((r) => ({ name: PLANS.find((p) => p.id === r.plan)?.name ?? r.plan, on: day(r.cancel_at) }));
   const monthly = monthlyJobCredits(grants, now);
 
   const { data: ledgerRows, error: ledgerError } = await supabase.from('credit_ledger').select('delta, job, source, created_at');
@@ -64,6 +66,7 @@ export default async function Workspace({ searchParams }: { searchParams: Promis
         ) : (
           <p className="mt-2 text-[15px] leading-normal text-body">
             {held.map((p) => p.name).join(', ')}: {unlocked} features unlocked.
+            {ending.map((e) => <span key={e.name} className="mt-1 block text-red">{e.name} is cancelled. You keep access until {e.on}.</span>)}
           </p>
         )}
         {account?.paddle_customer_id && (
