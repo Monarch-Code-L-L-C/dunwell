@@ -98,7 +98,7 @@ Statutory rates change twice a year. In the first week of January and of July, a
 ## Before you accept customers
 
 - [ ] **Name and domain.** "Dunwell" has not been checked for trademark conflicts or domain availability.
-- [ ] **Paddle sandbox purchase tested on the deployed site.** The billing code has been run against a stand-in for Paddle's API and Paddle.js, not yet against Paddle itself.
+- [x] **Paddle sandbox purchase tested on the deployed site** (11 November 2026): checkout, Pro unlock, all five steps, calendar file and customer portal link.
 - [ ] **Paddle live account approved** for your company and domain, then switched from sandbox to production.
 - [ ] **Vercel Pro** (or another host) before real payments.
 - [ ] **AI tailoring tested with a real key**, or left off. Same caveat: tested against a stub only.
